@@ -1,25 +1,30 @@
 const express = require("express");
 const app = express();
 
-//------------Mongoose----------------------------------------
+require("dotenv").config();
+
 const mongoose = require("mongoose");
+
+//Routes
+const userRoutes = require("./routes/user");
+
+//Mongoose
+const uriConnect = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.kkjcm.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`;
+
 mongoose
-    .connect(
-        "mongodb+srv://solanum1:zcnVqF8tvNVeHFm@cluster0.kkjcm.mongodb.net/piiquante?retryWrites=true&w=majority",
-        { useNewUrlParser: true, useUnifiedTopology: true }
-    )
+    .connect(uriConnect, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("Connexion à MongoDB réussie !"))
     .catch((error) => {
         console.log("Connexion à MongoDB échouée !");
         console.log(error);
     });
+//`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.kkjcm.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`
 
 //------------Middleware qui intercepte toutes les requêtes qui contiennent du json et met à disposition ce corps de la requête sur l'objet requête dans req.body
 app.use(express.json());
 
 //--------------------------------------------------------------
 //------------Middleware CORS : Cross Origin Resource Sharing---
-
 app.use((req, res, next) => {
     //Header qui permet d'accéder à l'API depuis n'importe quelle origine '*'
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -35,6 +40,14 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+app.use((req, res, next) => {
+    res.json({ message: "requête bien reçue" });
+    next();
+});
+//--------------------------------------------------------------
+
+app.use("/api/auth", userRoutes);
 
 //--------------------------------------------------------------
 
