@@ -5,8 +5,13 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 
-//Routes
+//permet d'accéder au path du serveur
+const path = require("path");
+
+//----------------------------Importation des routes------------
+
 const userRoutes = require("./routes/user");
+const sauceRoutes = require("./routes/sauce");
 
 //Mongoose
 const uriConnect = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.kkjcm.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`;
@@ -41,13 +46,13 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use((req, res, next) => {
-    res.json({ message: "requête bien reçue" });
-    next();
-});
-//--------------------------------------------------------------
+//----------------------------Enregistrement des routes------------
+
+//Gestionnaire de routage
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/api/auth", userRoutes);
+app.use("/api/sauces", sauceRoutes);
 
 //--------------------------------------------------------------
 

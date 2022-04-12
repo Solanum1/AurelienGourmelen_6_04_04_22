@@ -18,9 +18,14 @@ exports.signup = (req, res, next) => {
                 .then(() =>
                     res.status(201).json({ message: "Utilisateur créé" })
                 )
-                .catch((error) => res.status(400).json({ error }));
+                .catch((error) => {
+                    res.status(400).json({ error: error.message });
+                });
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+            console.log(error.message);
+        });
 };
 
 exports.login = (req, res, next) => {
@@ -42,15 +47,17 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         userId: user._id,
                         token: jwt.sign(
-                            {
-                                userId: user._id,
-                            },
+                            { userId: user._id },
                             `${process.env.KEY_TOKEN}`,
-                            { expriresIn: "24h" }
+                            { expiresIn: "24h" }
                         ),
                     });
                 })
-                .catch((error) => res.status(500).json({ error: "echec" }));
+                .catch((error) => {
+                    res.status(501).json({ error: error.message });
+                });
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        });
 };
