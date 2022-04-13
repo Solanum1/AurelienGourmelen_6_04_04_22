@@ -1,5 +1,6 @@
 //----------------Importations--------------------------------
 const Sauce = require("../models/Sauce");
+const fs = require("fs");
 
 //----------------Logique métier des sauces-------------------
 
@@ -58,7 +59,20 @@ exports.updateSauce = (req, res, next) => {
 
 //Supprimer une sauce - méthode deleteOne
 exports.deleteSauce = (req, res, next) => {
-    Sauce.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: "Sauce supprimée" }))
-        .catch((error) => res.status(400).json({ error }));
+    //On trouve l'objet dans la base de données
+    Sauce.findOne({ _id: req.params.id })
+        .then((sauce) => {
+            //On extrait le nom du fichier à supprimer
+            const filename = sauce.imageUrl.split("/images/")[1];
+            //On supprime le fichier
+            fs.unlink(`images/${filename}`, () => {
+                //Suppression de l'objet dans la base de données
+                Sauce.deleteOne({ _id: req.params.id })
+                    .then(() =>
+                        res.status(200).json({ message: "Sauce supprimée" })
+                    )
+                    .catch((error) => res.status(400).json({ error }));
+            });
+        })
+        .catch((error) => res.status(500).json({ error }));
 };
