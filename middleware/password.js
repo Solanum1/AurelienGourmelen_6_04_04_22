@@ -1,5 +1,4 @@
 //Importation de password-validator
-
 const passwordValidator = require("password-validator");
 
 //Création du schéma
@@ -12,7 +11,7 @@ passwordSchema
     .is()
     .max(30) // Maximum 30 caractères
     .has()
-    .uppercase(2) // Doit avoir une majuscule
+    .uppercase(2) // Doit avoir deux majuscules
     .has()
     .lowercase() // Doit avoir des minuscules
     .has()

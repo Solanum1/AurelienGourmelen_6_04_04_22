@@ -16,8 +16,6 @@ const sauceCtrl = require("../controllers/sauceCtrl");
 //importation du controlleur like
 const likeCtrl = require("../controllers/likeCtrl");
 
-//
-
 //--------------------------Routers-------------------------------
 
 router.post("/", auth, multer, sauceCtrl.createSauce);
