@@ -1,4 +1,9 @@
+//----------------------------Importations---------------------
+
+//importation d'express
 const express = require("express");
+
+//appel de la méthode express()
 const app = express();
 
 require("dotenv").config();
@@ -10,10 +15,13 @@ const path = require("path");
 
 //----------------------------Importation des routes------------
 
+//Import de la route user
 const userRoutes = require("./routes/user");
+//Import de la route sauce
 const sauceRoutes = require("./routes/sauce");
 
-//Mongoose
+//----------------------------Connection à MongoDB---------------
+
 const uriConnect = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.kkjcm.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`;
 
 mongoose
@@ -23,9 +31,7 @@ mongoose
         console.log("Connexion à MongoDB échouée !");
         console.log(error);
     });
-//`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.kkjcm.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`
 
-//------------Middleware qui intercepte toutes les requêtes qui contiennent du json et met à disposition ce corps de la requête sur l'objet requête dans req.body
 app.use(express.json());
 
 //--------------------------------------------------------------
@@ -54,6 +60,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/auth", userRoutes);
 app.use("/api/sauces", sauceRoutes);
 
-//--------------------------------------------------------------
+//-----------------------------Exports------------------------------
 
+//Export de l'application express app afin que l'on puisse y accéder depuis les autres fichiers
 module.exports = app;
