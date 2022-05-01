@@ -6,3 +6,5 @@ node_modules
 /images/*.jpeg
 /images/*.png
 /images/*.gif
+
+controllers/likeCtrlArchive.js
